@@ -539,48 +539,7 @@ while True:
         #irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + " : " + message + '\r\n')
 
 ####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker
-    # if "PRIVMSG" in data and "clips.twitch.tv" not in (message):
-    #     if not plebcheckk(flags):
-    #         if re.search(webpatt, message):
-    #             try:
-    #                print perm[user]
-    #                if perm[user] > 0:
-    #                     perm[user] -= 1
-    #             except KeyError:
-    #                 #irc.send('PRIVMSG ' + channel + ' :' "link" + '\r\n')
-    #                 print flags
-    #                 irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
-    #                 #irc.send('PRIVMSG ' + channel + ' :' + msg1 + "@" + user + '\r\n')
-    # if "PRIVMSG" in data and "clips.twitch.tv" not in (message):
-    #     if not plebcheckk(flags):
-    #         if blacklist != None:
-    #             xa = 0
-    #             for pattern in blacklist:
-    #                 # if pattern in (message):
-    #                 if re.search(r"%s" % pattern, message):
-    #                     irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
-    #                     #irc.send('PRIVMSG ' + channel + ' :' + "HeyGuys " + pattern + '\r\n')
-    #                 """
-    #                 temps = '[' + blacklist[xa] + ']'
-    #                 strngy = '%r' % temps
-    #                 xa += 1
-    #                 print strngy
-    #                 print temps
-    #                 print blacklist
-    #                 if re.search(strngy, message):
-    #                     print strngy
-    #
-    #                     break
-    #                 """
-    #         if re.search(webpatt, message):
-    #             try:
-    #                 print perm[user]
-    #                 if perm[user] > 0:
-    #                     perm[user] -= 1
-    #             except KeyError:
-    #                 # irc.send('PRIVMSG ' + channel + ' :' "link" + '\r\n')
-    #                 print flags
-    #                 irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
+
     if "PRIVMSG" in data and "clips.twitch.tv" not in (message):
         if not plebcheckk(flags):
             if blacklist != None:
@@ -591,6 +550,7 @@ while True:
                     if re.search(strngy, message):
                         print "blabla"
                         irc.send('PRIVMSG ' + channel + ' :' + "HeyGuys" + '\r\n')
+                        #nazi bot ^
                         break
             if re.search(webpatt, message):
                 try:
@@ -616,6 +576,7 @@ while True:
             irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + data + '\r\n')
             irc.send('PART ' + channel + '\r\n')
             quit()
+            #broken by :quittskiifpv!quittskiifpv@quittskiifpv.tmi.twitch.tv JOIN #thebuddha3
 
     if "!permit" in (message):
         if "mod=1" in (flags) or "badges=broadcaster" in (flags):
@@ -655,12 +616,11 @@ while True:
                 time.sleep(0.2)
                 irc.send("PRIVMSG " + channel + " :" + shoutstr + "\r\n")
 
-    # Uptime Command
+# Uptime Command
     if (message) == "!uptime\r\n":
         uptimeCheck(irc)
 
 #Basic Commmands
-
     if "!playlist" in (message):
         if unsetpListwait != True:
             unsetpListwait = True
@@ -682,6 +642,7 @@ while True:
             uss = Timer(30, unsetpMeta)
             uss.start()
 
+#shoutouts
     if (message) == "!bob\r\n":
         if unsetpBobwait != True:
             unsetpBobwait = True
@@ -717,7 +678,7 @@ while True:
             uss = Timer(120, unsetpGranny)
             uss.start()
 
-
+# Social
     if (message) == "!discord\r\n":
         if unsetpDiscordwait != True:
             unsetpDiscordwait = True
@@ -732,18 +693,24 @@ while True:
             uss = Timer(60, unsetpTwitter)
             uss.start()
 
+    if (message) == "!merch\r\n":
+        if unsetpMerchwait != True:
+            unsetpMerchwait = True
+            irc.send("PRIVMSG " + channel + " :" + msgMerch + "\r\n")
+            uss = Timer(60, unsetpMerch)
+            uss.start()
+
+# SLAY THE SQUIDS
     if "!squidslayer" in (message):
         if "mod=1" in (flags) or "badges=broadcaster" in (flags):
             squidBlocker = 1
             irc.send("PRIVMSG " + channel + " :" + "Squids, I'm coming for you RIP" + "\r\n")
             irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + '\r\n')
-
     if "!squidsaver" in (message):
         if "mod=1" in (flags) or "badges=broadcaster" in (flags):
             squidBlocker = 0
             irc.send("PRIVMSG " + channel + " :" + user + " just saved the squids" + "\r\n")
             irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + '\r\n')
-
     if re.search(r"Squid[1-4]", message):
         if (squidBlocker) == 1:
             irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
@@ -757,20 +724,19 @@ while True:
             #blacklistAdd(garbage)
             #irc.send("PRIVMSG " + channel + " :" + "\"" + garbage + "\"" " Has been added to the blacklist" + "\r\n")
 
+#um unbanned but on warning
     if (user) == "yasirkhan123" or (user) == "billbob19" or (user) == "xeapzz" or (user) == "littlejabari":
         irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + " : " + message + '\r\n')
 
+#Tell me when plebs are retarded so i can ban
     if "nigger" in (message) or "n i g g e r" in (message) or "faggot" in (message) or "f a g g o t" in (message):
         irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + ":" + message + '\r\n')
-    # if "eli" in (message):
-    #     irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
-    if (message) == "!merch\r\n":
-        if unsetpMerchwait != True:
-            unsetpMerchwait = True
-            irc.send("PRIVMSG " + channel + " :" + msgMerch + "\r\n")
-            uss = Timer(60, unsetpMerch)
-            uss.start()
 
+#quick work blacklister
+    # if "banned" in (message):
+    #      irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
+
+#blacklist not working yet
     if "!blacklist" in (message):
         if "mod=1" in (flags) or "badges=broadcaster" in (flags) or (user) == "thor10768765":
             garbage = message.split(" ")
@@ -792,6 +758,7 @@ while True:
                 irc.send("PRIVMSG " + channel + " :" + "\"" + garbage + "\"" " Has been Removed" + "\r\n")
             print blacklist
 
+#writing msgs to DB (breaks sometimes)
     try:
         if "tmi.twitch.tv" not in (user) and "tmi.twitch.tv" not in (message) and (user) != "":
             if "jtv MODE" not in (user) and "justinfan" not in (user) and user != "twitchnotify":
@@ -811,21 +778,20 @@ while True:
     except Exception as e:
         print "oh shit something happened... " + str(e)
 
+#check points
     if (message) == "!level\r\n" or (message) == "!xp\r\n" or (message) == "!points\r\n" or (message) == "!noodles\r\n":
-    #if "!xp" in (message):
-        print "!noodle good trigger"
         checkpoints(user)
 
+#still broken needs shit error 'string index out of range'
     if "!last" in (message):
         print "!last good trigger"
         try:
             if "mod=1" in (flags) or "badges=broadcaster" in (flags) or (user) == "thor10768765":
                 messageq = message.split(" ")
                 messagereqc = messageq[0]
+                messageq = string.replace(messageq[2], '\r\n', '')
                 messageq = messageq[1]
-
                 messagereqc = string.replace(messagereqc, "!last", "")
-
                 print messageq
                 print messagereqc
                 queryPlz(str(messageq), irc, int(messagereqc), user)
