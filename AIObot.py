@@ -183,7 +183,7 @@ def liveCheck(chan):
         return False
     else:
         print "Online"
-        return True
+        return False
 #UpTime Checker
 def uptimeCheck(irc):
     global channohash
@@ -504,7 +504,6 @@ while True:
 
         #System Startup Complete
         systemBootUp = False
-#Auto Posting on timer
     if unsetpPostwait == False:
         unsetpPostwait = True
         if liveCheck(channohash):
@@ -570,7 +569,7 @@ while True:
         secn = stringy[3] # second val
         calcIt(firts, opz, secn)
 
-    if "!quit" in (message):
+    if message == "!quit\r\n":
         if user == "thebuddha3" or "breadcam" or "riotcam" or "thor10768765":
             irc.send('PRIVMSG ' + channel + " :" + "Connection Terminated... BibleThump" + "\r\n")
             irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + data + '\r\n')
@@ -617,7 +616,7 @@ while True:
                 irc.send("PRIVMSG " + channel + " :" + shoutstr + "\r\n")
 
 # Uptime Command
-    if (message) == "!uptime\r\n":
+    if message == "!uptime\r\n":
         uptimeCheck(irc)
 
 #Basic Commmands
@@ -628,14 +627,14 @@ while True:
             usl = Timer(120, unsetpList)
             usl.start()
 
-    if (message) == "!sub\r\n":
+    if message == "!sub\r\n":
         if unsetpSubwait != True:
             unsetpSubwait = True
             irc.send("PRIVMSG " + channel + " :" + msgSubscriber + "\r\n")
             uss = Timer(120, unsetpSub)
             uss.start()
 
-    if (message) == "!meta\r\n":
+    if message == "!meta\r\n":
         if unsetpMetawait != True:
             unsetpMetawait = True
             irc.send("PRIVMSG " + channel + " :" + msgMeta + "\r\n")
@@ -643,35 +642,35 @@ while True:
             uss.start()
 
 #shoutouts
-    if (message) == "!bob\r\n":
+    if message == "!bob\r\n":
         if unsetpBobwait != True:
             unsetpBobwait = True
             irc.send("PRIVMSG " + channel + " :" + msgBob + "\r\n")
             uss = Timer(120, unsetpBob)
             uss.start()
 
-    if (message) == "!tony\r\n":
+    if message == "!tony\r\n":
         if unsetpTonywait != True:
             unsetpTonywait = True
             irc.send("PRIVMSG " + channel + " :" + msgTony + "\r\n")
             uss = Timer(120, unsetpTony)
             uss.start()
 
-    if (message) == "!reggie\r\n":
+    if message == "!reggie\r\n":
         if unsetpReggiewait != True:
             unsetpReggiewait = True
             irc.send("PRIVMSG " + channel + " :" + msgReggie + "\r\n")
             uss = Timer(120, unsetpReggie)
             uss.start()
 
-    if (message) == "!peter\r\n":
+    if message == "!peter\r\n":
         if unsetpPeterwait != True:
             unsetpPeterwait = True
             irc.send("PRIVMSG " + channel + " :" + msgPeter + "\r\n")
             uss = Timer(120, unsetpPeter)
             uss.start()
 
-    if (message) == "!granny\r\n":
+    if message == "!granny\r\n":
         if unsetpGrannywait != True:
             unsetpGrannywait = True
             irc.send("PRIVMSG " + channel + " :" + msgGranny + "\r\n")
@@ -679,21 +678,21 @@ while True:
             uss.start()
 
 # Social
-    if (message) == "!discord\r\n":
+    if message == "!discord\r\n":
         if unsetpDiscordwait != True:
             unsetpDiscordwait = True
             irc.send("PRIVMSG " + channel + " :" + msgDiscord + "\r\n")
             uss = Timer(60, unsetpDiscord)
             uss.start()
 
-    if (message) == "!twitter\r\n":
+    if message == "!twitter\r\n":
         if unsetpTwitterwait != True:
             unsetpTwitterwait = True
             irc.send("PRIVMSG " + channel + " :" + msgTwitter + "\r\n")
             uss = Timer(60, unsetpTwitter)
             uss.start()
 
-    if (message) == "!merch\r\n":
+    if message == "!merch\r\n":
         if unsetpMerchwait != True:
             unsetpMerchwait = True
             irc.send("PRIVMSG " + channel + " :" + msgMerch + "\r\n")
@@ -730,6 +729,9 @@ while True:
 
 #Tell me when plebs are retarded so i can ban
     if "nigger" in (message) or "n i g g e r" in (message) or "faggot" in (message) or "f a g g o t" in (message):
+        print "shit"
+
+
         irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + ":" + message + '\r\n')
 
 #quick work blacklister
@@ -759,24 +761,8 @@ while True:
             print blacklist
 
 #writing msgs to DB (breaks sometimes)
-    try:
-        if "tmi.twitch.tv" not in (user) and "tmi.twitch.tv" not in (message) and (user) != "":
-            if "jtv MODE" not in (user) and "justinfan" not in (user) and user != "twitchnotify":
-                date = time.strftime("%Y-%m-%dT%H:%M:%S")
-                blah = "select count (*) from chat"
 
-                c.execute(blah)
-                temp = c.fetchone()
-                # print temp[0]
-                temp = temp[0] + 1
-                blah = "insert into chat"
-                messageq = '"' + message + '"'
-                c.execute(blah + " values (?,?,?,?,?,?)",
-                          (user, messageq, temp, flags, channohash, date))
-                conn.commit()
-                #print "write success"
-    except Exception as e:
-        print "oh shit something happened... " + str(e)
+
 
 #check points
     if (message) == "!level\r\n" or (message) == "!xp\r\n" or (message) == "!points\r\n" or (message) == "!noodles\r\n":
@@ -784,21 +770,21 @@ while True:
 
 #still broken needs shit error 'string index out of range'
     if "!last" in (message):
-        print "!last good trigger"
         try:
             if "mod=1" in (flags) or "badges=broadcaster" in (flags) or (user) == "thor10768765":
                 messageq = message.split(" ")
                 messagereqc = messageq[0]
-                messageq = string.replace(messageq[2], '\r\n', '')
                 messageq = messageq[1]
+
                 messagereqc = string.replace(messagereqc, "!last", "")
+
                 print messageq
                 print messagereqc
                 queryPlz(str(messageq), irc, int(messagereqc), user)
         except Exception as e:
             print e
 
-# # if re.search(r"[cC]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", message):
+        # # if re.search(r"[cC]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", message):
 # #
 # #     print message
 # #
@@ -864,3 +850,7 @@ while True:
 # #Errors
 # oh shit something happened... You must not use 8-bit bytestrings unless you use a text_factory that can interpret 8-bit bytestrings (like text_factory = str). It is highly recommended that you instead just switch your application to Unicode strings.
 # emmortall: @TheBuddha3 do something man please!@!@!#@!@$#!@#$!@#$!
+
+
+#Saved Whisper Recieve
+#thor10768765: @badges=;color=#0000FF;display-name=thor10768765;emotes=;message-id=1;thread-id=90528942_155572970;turbo=0;user-id=90528942;user-type= :thor10768765!thor10768765@thor10768765.tmi.twitch.tv WHISPER thebuddha3bot :hai
