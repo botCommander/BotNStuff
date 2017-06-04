@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import socket
 import ssl
 import botcfg
@@ -6,12 +6,12 @@ import string
 import time
 from threading import *
 import re
-import urllib,urllib2, json
+import urllib, json
 import datetime
 import random
 import sqlite3
 
-re.purge() # some housekeeping
+re.purge()  # some housekeeping
 server = "irc.chat.twitch.tv"
 port = 443
 channohash = "thebuddha3"  # target channel without the hashkey
@@ -27,7 +27,7 @@ squidBlocker = 0
 subscriber = ""
 subname = ""
 submonths = ""
-#BOOLS OF BOOLS OF BOOLS
+# BOOLS OF BOOLS OF BOOLS
 unsetpListwait = False
 unsetpSubwait = False
 calcwaitplz = False
@@ -45,9 +45,9 @@ uptimewait = False
 waitplease = False
 waitplease2 = False
 systemBootUp = True
-#IRC SEND MESSAGES
-msg1 = ".me (bot): I don't like links... DansGame " # link posting timeout message
-msgPlaylist =  ".me Check Out Buddha's Playlist https://www.youtube.com/playlist?list=PLbegEdtZ4V6V4_76iimPQpJp4MWjAFKJk"
+# IRC SEND MESSAGES
+msg1 = ".me (bot): I don't like links... DansGame "  # link posting timeout message
+msgPlaylist = ".me Check Out Buddha's Playlist https://www.youtube.com/playlist?list=PLbegEdtZ4V6V4_76iimPQpJp4MWjAFKJk"
 msgSubscriber = ".me If you want to support the channel and get access to our sub only emotes buddhaCrash buddhaLove buddhaPineapple buddhaHi buddhaLean buddhaSellout buddhaCry buddhaLUL buddhaPray buddhaTen buddhaGasm buddhaPray you can subscribe at https://www.twitch.tv/thebuddha3/subscribe <3"
 msgMeta = " .me " + " ⚠️ ⚠️ ⚠️ ⚠️ Anyone caught posting META INFO in chat will receive a TIMEOUT. It ruins the experience for BUDDHA AND HIS VIEWERS. It's also against SERVER AND CHANNEL rules ⚠️ ⚠️ ⚠️ ⚠️"
 msgBob = ".me Please go checkout Bob at https://www.twitch.tv/coolidgehd show him some love and drop him a follow"
@@ -60,7 +60,7 @@ msgTwitter = ".me Keep up to date with the latest streamn info by following Budd
 msgMerch = "A STATE OF EMERGENCY HAS OFFICIALLY BEEN ISSUED FOR THE CITY OF LOS SANTOS Check out all the \_eanbois and SOE Merch at https://www.designbyhumans.com/state-of-emergency"
 # CONNECTION #
 # init socket
-self = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+self = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # connect to said socket
 self.connect((server, port))
 # wrap in ssl
@@ -79,15 +79,20 @@ irc.send("CAP REQ :twitch.tv/tags" + "\r\n")
 # commands request
 irc.send("CAP REQ :twitch.tv/commands" + "\r\n")
 # join message
-#irc.send("PRIVMSG " + channel + " :" + ".me Im back KappaClaus " + "\r\n")
+# irc.send("PRIVMSG " + channel + " :" + ".me Im back KappaClaus " + "\r\n")
 
-CHAT_MSG=re.compile(r"@.+?PRIVMSG.+?(:){1}") # New (for irc flags mode)
+CHAT_MSG = re.compile(r"@.+?PRIVMSG.+?(:){1}")  # New (for irc flags mode)
+
 
 def permit(name):
     del perm[name]
+
+
 def plebcheckk(flagz):
     if re.search(plebcheck, flags):
         return True
+
+
 def calcIt(v1, op, v2):
     global calcwaitplz
     if calcwaitplz != True:
@@ -95,72 +100,103 @@ def calcIt(v1, op, v2):
         try:
             if op == "+":
                 answ = int(v1) + int(v2)
-                irc.send('PRIVMSG ' + channel + ' :' "Answer is: " + str(answ)  + '\r\n')
+                irc.send('PRIVMSG ' + channel + ' :' "Answer is: " + str(answ) + '\r\n')
             if op == "-":
                 answ = int(v1) - int(v2)
-                irc.send('PRIVMSG ' + channel + ' :' "Answer is: " + str(answ)  + '\r\n')
+                irc.send('PRIVMSG ' + channel + ' :' "Answer is: " + str(answ) + '\r\n')
             if op == "*":
                 answ = int(v1) * int(v2)
-                irc.send('PRIVMSG ' + channel + ' :' "Answer is: " + str(answ)  + '\r\n')
+                irc.send('PRIVMSG ' + channel + ' :' "Answer is: " + str(answ) + '\r\n')
             if op == "/":
                 answ = int(v1) / int(v2)
-                irc.send('PRIVMSG ' + channel + ' :' "Answer is: " + str(answ)  + '\r\n')
+                irc.send('PRIVMSG ' + channel + ' :' "Answer is: " + str(answ) + '\r\n')
             calcwaitplz = True
             xy = Timer(120, unsetCalc)
             xy.start()
         except Exception as e:
             print e
-            print "likely NaN" # python has check for Not a number?
+            print "likely NaN"  # python has check for Not a number?
+
 ###############################
-#Timers Unsetters
+# Timers Unsetters
 def unsetCalc():
     global calcwaitplz
     calcwaitplz = False
+
+
 def unsetUt():
     print "UNSET UT"
     global uptimewait
     uptimewait = False
+
+
 def unsetpList():
     global unsetpListwait
     unsetpListwait = False
+
+
 def unsetpSub():
     global unsetpSubwait
     unsetpSubwait = False
+
+
 def unsetpMeta():
     global unsetpMetawait
     unsetpMetawait = False
+
+
 def unsetpBob():
     global unsetpBobwait
     unsetpBobwait = False
+
+
 def unsetpReggie():
     global unsetpReggiewait
     unsetpReggiewait = False
+
+
 def unsetpTony():
     global unsetpTonywait
     unsetpTonywait = False
+
+
 def unsetpPeter():
     global unsetpPeterwait
     unsetpPeterwait = False
+
+
 def unsetpGranny():
     global unsetpGrannywait
     unsetpGrannywait = False
+
+
 def unsetpDiscord():
     global unsetpDiscordwait
     unsetpDiscordwait = False
+
+
 def unsetpTwitter():
     global unsetpTwitterwait
     unsetpTwitterwait = False
+
+
 def unsetpMerch():
     global unsetpMerchwait
     unsetpMerchwait = False
+
+
 def unsetpPostTimer():
     global unsetpPostwait
     unsetpPostwait = False
+
+
 def blacklistAdd(garbage):
     global blacklist
-    #print "before " + blacklistlist
+    # print "before " + blacklistlist
     blacklist.append(garbage)
-    #print "after " + blacklistlist
+    # print "after " + blacklistlist
+
+
 def blacklistRem(garbage):
     x = 0
     global blacklist
@@ -170,9 +206,10 @@ def blacklistRem(garbage):
             blacklist.pop(x)
         x += 1
     print garbage
-#Live Checker
-def liveCheck(chan):
 
+
+# Live Checker
+def liveCheck(chan):
     cliid = "/?client_id=q6batx0epp608isickayubi39itsckt"
     uptadr = "https://api.twitch.tv/kraken/streams/" + chan + cliid
 
@@ -184,13 +221,15 @@ def liveCheck(chan):
     else:
         print "Online"
         return True
-#UpTime Checker
+
+
+# UpTime Checker
 def uptimeCheck(irc):
     global channohash
     global uptimewait
     cliid = "/?client_id=q6batx0epp608isickayubi39itsckt"
     uptadr = "https://api.twitch.tv/kraken/streams/" + channohash + cliid
-    #uptadr = "https://api.twitch.tv/kraken/streams/" + 'thebuddha3' + cliid
+    # uptadr = "https://api.twitch.tv/kraken/streams/" + 'thebuddha3' + cliid
 
     if uptimewait != True:
         uptimewait = True
@@ -200,28 +239,27 @@ def uptimeCheck(irc):
             print "Offline"
             irc.send('PRIVMSG ' + channel + " :" + ".me The Channel Appears To Be Offline..." + "\r\n")
         else:
-                     
+
             s = data['stream']['created_at'][0:19]
             sucess = time.mktime(datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S").timetuple())
-             # change timestamp to epoch time
+            # change timestamp to epoch time
 
             answer = time.time() - sucess  # get the difference
             answer = answer + 18000
             print answer  # difference in seconds
-            
 
             answer /= 60  # diff in minutes
 
-            if answer > 0 and answer < 60:                # if under an hour just print minutes
+            if answer > 0 and answer < 60:  # if under an hour just print minutes
                 print "live for " + answer + " minutes"
                 irc.send('PRIVMSG ' + channel + " :" + ".me Live For: " + answer + "\r\n")
 
-            if answer > 60:      # if over an hour change to hours and seperate whole hours from the rest
-                
-                answer /= 60                   # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            if answer > 60:  # if over an hour change to hours and seperate whole hours from the rest
+
+                answer /= 60  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                 answer -= 1  # < < < < < < < < < <# idk why but it was an hour ahead of true time
                 splits = str(answer).split('.')  # ^ something to do with gmt/utc and dst? fucked if i know
-                answer = splits[0]              # assuming it will be different for you.. bttv /uptime was handy
+                answer = splits[0]  # assuming it will be different for you.. bttv /uptime was handy
                 idk = float("0." + splits[1])  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                 idk = idk * 60
                 idk = str(idk).split('.')
@@ -233,12 +271,14 @@ def uptimeCheck(irc):
                     irc.send('PRIVMSG ' + channel + " :" + ".me Live For: " + str(idk) + " Minutes" + "\r\n")
                 else:
                     print "live for " + str(answer) + " hours and " + str(idk) + " minutes"
-                    irc.send('PRIVMSG ' + channel + " :" + ".me Live For: " + str(answer) + " Hours And " + str(idk) + " Minutes" + "\r\n")
-           
-            
+                    irc.send('PRIVMSG ' + channel + " :" + ".me Live For: " + str(answer) + " Hours And " + str(
+                        idk) + " Minutes" + "\r\n")
+
         ut = Timer(30, unsetUt)
         ut.start()
-#Points/XP/DBStarter/Steak
+
+
+# Points/XP/DBStarter/Steak
 # def chatz():
 #     global channohash
 #     if liveCheck(channohash):
@@ -344,6 +384,8 @@ def queryPlz(name, ir, count, orig):
     except Exception as e:
         print e
         conne.close()
+
+
 def tablecheck():
     connx = sqlite3.connect("buddhalog.db")
     cu = connx.cursor()
@@ -412,6 +454,8 @@ def tablecheck():
                    ("username", 1, 1, "channel", date))
         connx.commit()
         connx.close()
+
+
 def checkpoints(name):
     global waitplease
     global waitplease2
@@ -468,15 +512,16 @@ def checkpoints(name):
 
         waitplease2 = False
 
+
 # 1 point per min Scale will be changed
 # (1):30m (2):1h (3):2h (4):4h (5):8h (6):16h (7):32h (8):64h (9):128h (10):256h (11):512h (12):1024h
 #    30     60     120    240    480    960    1920    3840    7860      15360    30720      61440
 
-#Auto Poster Startup
+# Auto Poster Startup
 uzss = Timer(150, unsetpPostTimer)
 uzss.start()
 unsetpPostwait = True
-#Points Startup
+# Points Startup
 tablecheck()
 # breeeeadd = Timer(600, chatz)
 # breeeeadd.start()
@@ -485,7 +530,7 @@ c = conn.cursor()
 
 ##Main Bot Start
 while True:
-    #gets output from IRC server
+    # gets output from IRC server
     data = irc.recv(1024)
     # ping/pong
     if data == "PING :tmi.twitch.tv\r\n":
@@ -497,12 +542,10 @@ while True:
     flags = data.split(':', 1)[0]
 
     if systemBootUp:
+        # Startup prep for random message poster
 
 
-        #Startup prep for random message poster
-
-
-        #System Startup Complete
+        # System Startup Complete
         systemBootUp = False
     if unsetpPostwait == False:
         unsetpPostwait = True
@@ -520,32 +563,34 @@ while True:
                 irc.send("PRIVMSG " + channel + " :" + msgMerch + "\r\n")
             uzss = Timer(300, unsetpPostTimer)
             uzss.start()
-    print (user + ": " + message) # new (for flags mode)
-#SUB NOTIFICATION
-    if "room-id=136765278" and "msg-param-sub-plan-name=Channel\sSubscription\s(thebuddha3)" and "tmi.twitch.tv USERNOTICE"in message:
+    print (user + ": " + message)  # new (for flags mode)
+    # SUB NOTIFICATION
+    if "room-id=136765278" and "msg-param-sub-plan-name=Channel\sSubscription\s(thebuddha3)" and "tmi.twitch.tv USERNOTICE" in message:
         subscriber = data
         subname = subscriber.split(";")[2]
         subname = subname.split("=")[1]
         submonths = subscriber.split(";")[8]
         submonths = submonths.split("=")[1]
         if submonths == "1":
-            irc.send('PRIVMSG ' + channel + ' :' + subname + " just subscribed. Welcome to Buddha's Dojo buddhaHi Spam some love in the chat for our newest member buddhaLove" + '\r\n')
+            irc.send(
+                'PRIVMSG ' + channel + ' :' + subname + " just subscribed. Welcome to Buddha's Dojo buddhaHi Spam some love in the chat for our newest member buddhaLove" + '\r\n')
         else:
-            irc.send('PRIVMSG ' + channel + ' :' + subname + " just resubscribed for " + submonths + " months. Thanks for staying loyal to Buddha's Dojo buddhaHi Spam some love in the chat! buddhaLove" + '\r\n')
+            irc.send(
+                'PRIVMSG ' + channel + ' :' + subname + " just resubscribed for " + submonths + " months. Thanks for staying loyal to Buddha's Dojo buddhaHi Spam some love in the chat! buddhaLove" + '\r\n')
 
-####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker
+            ####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker####LinkBlocker
 
     if "PRIVMSG" in data and "clips.twitch.tv" not in (message):
         if not plebcheckk(flags):
             if blacklist != None:
                 xa = 0
                 for pattern in blacklist:
-                    strngy = "["+ blacklist[xa] + "]"
+                    strngy = "[" + blacklist[xa] + "]"
                     xa += 1
                     if re.search(strngy, message):
                         print "blabla"
                         irc.send('PRIVMSG ' + channel + ' :' + "HeyGuys" + '\r\n')
-                        #nazi bot ^
+                        # nazi bot ^
                         break
             if re.search(webpatt, message):
                 try:
@@ -553,25 +598,25 @@ while True:
                     if perm[user] > 0:
                         perm[user] -= 1
                 except KeyError:
-                    #irc.send('PRIVMSG ' + channel + ' :' "link" + '\r\n')
+                    # irc.send('PRIVMSG ' + channel + ' :' "link" + '\r\n')
                     print flags
                     irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
                     irc.send('PRIVMSG ' + channel + ' :' + msg1 + "@" + user + '\r\n')
 
     if "!cccalc" in (message):
         stringy = message.split(" ")
-        firts = stringy[1] # first value
+        firts = stringy[1]  # first value
         opz = stringy[2]  # operator
-        secn = stringy[3] # second val
+        secn = stringy[3]  # second val
         calcIt(firts, opz, secn)
 
     if message == "!quit\r\n":
-        if user == "thebuddha3" or user == "breadcam" or user == "riotcam" or user == "thor10768765":
+        if user == "thebuddha3" or "breadcam" or "riotcam" or "thor10768765":
             irc.send('PRIVMSG ' + channel + " :" + "Connection Terminated... BibleThump" + "\r\n")
             irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + data + '\r\n')
             irc.send('PART ' + channel + '\r\n')
             quit()
-            #broken by :quittskiifpv!quittskiifpv@quittskiifpv.tmi.twitch.tv JOIN #thebuddha3
+            # broken by :quittskiifpv!quittskiifpv@quittskiifpv.tmi.twitch.tv JOIN #thebuddha3
 
     if "!permit" in (message):
         if "mod=1" in (flags) or "badges=broadcaster" in (flags):
@@ -611,11 +656,11 @@ while True:
                 time.sleep(0.2)
                 irc.send("PRIVMSG " + channel + " :" + shoutstr + "\r\n")
 
-# Uptime Command
+                # Uptime Command
     if message == "!uptime\r\n":
         uptimeCheck(irc)
 
-#Basic Commmands
+    # Basic Commmands
     if "!playlist" in (message):
         if unsetpListwait != True:
             unsetpListwait = True
@@ -637,7 +682,7 @@ while True:
             uss = Timer(30, unsetpMeta)
             uss.start()
 
-#shoutouts
+            # shoutouts
     if message == "!bob\r\n":
         if unsetpBobwait != True:
             unsetpBobwait = True
@@ -673,7 +718,7 @@ while True:
             uss = Timer(120, unsetpGranny)
             uss.start()
 
-# Social
+            # Social
     if message == "!discord\r\n":
         if unsetpDiscordwait != True:
             unsetpDiscordwait = True
@@ -695,7 +740,7 @@ while True:
             uss = Timer(60, unsetpMerch)
             uss.start()
 
-# SLAY THE SQUIDS
+            # SLAY THE SQUIDS
     if "!squidslayer" in (message):
         if "mod=1" in (flags) or "badges=broadcaster" in (flags):
             squidBlocker = 1
@@ -710,27 +755,26 @@ while True:
         if (squidBlocker) == 1:
             irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
 
-    #if "!blacklist" in (message):
-    #    if "mod=1" in (flags) or "badges=broadcaster" in (flags):
-    #        garbage = message.split(" ")
-    #        garbage = str(garbage[1:len(garbage)])
-    #        garbage = str(garbage[1:-1])
+            # if "!blacklist" in (message):
+            #    if "mod=1" in (flags) or "badges=broadcaster" in (flags):
+            #        garbage = message.split(" ")
+            #        garbage = str(garbage[1:len(garbage)])
+            #        garbage = str(garbage[1:-1])
 
-            #blacklistAdd(garbage)
-            #irc.send("PRIVMSG " + channel + " :" + "\"" + garbage + "\"" " Has been added to the blacklist" + "\r\n")
+            # blacklistAdd(garbage)
+            # irc.send("PRIVMSG " + channel + " :" + "\"" + garbage + "\"" " Has been added to the blacklist" + "\r\n")
 
-#um unbanned but on warning
+            # um unbanned but on warning
     if (user) == "yasirkhan123" or (user) == "billbob19" or (user) == "xeapzz" or (user) == "littlejabari":
         irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + " : " + message + '\r\n')
 
-#Tell me when plebs are retarded so i can ban
+    # Tell me when plebs are retarded so i can ban
     if "nigger" in (message) or "n i g g e r" in (message) or "faggot" in (message) or "f a g g o t" in (message):
         print "shit"
 
-
         irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + ":" + message + '\r\n')
 
-#blacklist not working yet
+    # blacklist not working yet
     if "!blacklist" in (message):
         if "mod=1" in (flags) or "badges=broadcaster" in (flags) or (user) == "thor10768765":
             garbage = message.split(" ")
@@ -746,17 +790,18 @@ while True:
 
             if not str(garbage) in blacklist:
                 blacklistAdd(str(garbage))
-                irc.send("PRIVMSG " + channel + " :" + "\"" + garbage + "\"" " Has been added to the blacklist" + "\r\n")
+                irc.send(
+                    "PRIVMSG " + channel + " :" + "\"" + garbage + "\"" " Has been added to the blacklist" + "\r\n")
             else:
                 blacklistRem(garbage)
                 irc.send("PRIVMSG " + channel + " :" + "\"" + garbage + "\"" " Has been Removed" + "\r\n")
             print blacklist
 
-#writing msgs to DB (breaks sometimes)
+            # writing msgs to DB (breaks sometimes)
 
 
 
-#check points
+            # check points
     if (message) == "!level\r\n" or (message) == "!xp\r\n" or (message) == "!points\r\n" or (message) == "!noodles\r\n":
         checkpoints(user)
 
@@ -775,63 +820,63 @@ while True:
         except Exception as e:
             print e
 
-        # # if re.search(r"[cC]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", message):
-# #
-# #     print message
-# #
-# #     message = message.split(" ")
-# #     print str(len(message)) + " msglen"
-# #     total = 0
-# #     for i in (message):
-# #         print i + " hmmm"
-# #         xyy = i
-# #         if re.match(r"[Cc]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", xyy):
-# #             print "yay"
-# #
-# #             x = re.sub("[^0-9]", "", i)
-# #             print i + " i"
-# #             print x + " x"
-# #             total += int(x)
-# #
-# #     message = string.replace(str(message), "\r\n", "")
-# #     # bitstotal = int(bitstotal) + total
-# #
-# #     if total > 100000:
-# #         irc.send("PRIVMSG " + channel + " :" + ".me " + user + "Just Dropped " + str(
-# #             total) + " Bits!!! Thanks For Supporting The Stream Maddafakka!! :) " + "\r\n")
+            # # if re.search(r"[cC]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", message):
+            # #
+            # #     print message
+            # #
+            # #     message = message.split(" ")
+            # #     print str(len(message)) + " msglen"
+            # #     total = 0
+            # #     for i in (message):
+            # #         print i + " hmmm"
+            # #         xyy = i
+            # #         if re.match(r"[Cc]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", xyy):
+            # #             print "yay"
+            # #
+            # #             x = re.sub("[^0-9]", "", i)
+            # #             print i + " i"
+            # #             print x + " x"
+            # #             total += int(x)
+            # #
+            # #     message = string.replace(str(message), "\r\n", "")
+            # #     # bitstotal = int(bitstotal) + total
+            # #
+            # #     if total > 100000:
+            # #         irc.send("PRIVMSG " + channel + " :" + ".me " + user + "Just Dropped " + str(
+            # #             total) + " Bits!!! Thanks For Supporting The Stream Maddafakka!! :) " + "\r\n")
 
-    #print data
+    # print data
     time.sleep(0.1)
-    
+
 
 ######################################
 ################Links#################
-#https://tmi.twitch.tv/group/user/thebuddha3/chatters
+# https://tmi.twitch.tv/group/user/thebuddha3/chatters
 
 
 #################CHANGE LOG#######################
-#Version Codename TacoCatPizza
-#Working Features
-#Linkblocker, for those not in plebcheck
-#!permit, mod only
-#!shout <twitchname> , shoutout 5x for mods, 10x for KingBuddha
-#Auto announce on new sub.
+# Version Codename TacoCatPizza
+# Working Features
+# Linkblocker, for those not in plebcheck
+# !permit, mod only
+# !shout <twitchname> , shoutout 5x for mods, 10x for KingBuddha
+# Auto announce on new sub.
 #
 #
-#Known um FEATURES
-#Auto announce for new subs fires off when hosting
-#Auto announce needs to trigger for msg share rather than the twitch annoucement. This should cover resubs.
-#Um Permit
+# Known um FEATURES
+# Auto announce for new subs fires off when hosting
+# Auto announce needs to trigger for msg share rather than the twitch annoucement. This should cover resubs.
+# Um Permit
 #
-#Planned Features
-#Setup Pleb command timer so no spam
-#CSV Archives
+# Planned Features
+# Setup Pleb command timer so no spam
+# CSV Archives
 #
 #
 #
-#Examples
-#flags
-#@badges=broadcaster/1,turbo/1;color=#E100FF;display-name=Breadcam;emotes=;id=e40d4a02-6741-4fa9-847c-aeeb3d923650;mod=0;room-id=123950262;sent-ts=1494032337318;subscriber=0;tmi-sent-ts=1494032328735;turbo=1;user-id=123950262;user-type=
+# Examples
+# flags
+# @badges=broadcaster/1,turbo/1;color=#E100FF;display-name=Breadcam;emotes=;id=e40d4a02-6741-4fa9-847c-aeeb3d923650;mod=0;room-id=123950262;sent-ts=1494032337318;subscriber=0;tmi-sent-ts=1494032328735;turbo=1;user-id=123950262;user-type=
 
 
 
@@ -843,5 +888,5 @@ while True:
 # emmortall: @TheBuddha3 do something man please!@!@!#@!@$#!@#$!@#$!
 
 
-#Saved Whisper Recieve
-#thor10768765: @badges=;color=#0000FF;display-name=thor10768765;emotes=;message-id=1;thread-id=90528942_155572970;turbo=0;user-id=90528942;user-type= :thor10768765!thor10768765@thor10768765.tmi.twitch.tv WHISPER thebuddha3bot :hai
+# Saved Whisper Recieve
+# thor10768765: @badges=;color=#0000FF;display-name=thor10768765;emotes=;message-id=1;thread-id=90528942_155572970;turbo=0;user-id=90528942;user-type= :thor10768765!thor10768765@thor10768765.tmi.twitch.tv WHISPER thebuddha3bot :hai

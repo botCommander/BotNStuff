@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import socket
 import ssl
-import botcfg
+#import botcfg
 import string
 import time
 import re
@@ -26,8 +26,8 @@ self.connect((server, port))
 irc = ssl.wrap_socket(self)
 ##################################
 # SYSTEM STARTUP  #
-irc.send("PASS " + botcfg.oa + '\r\n')
-irc.send("NICK " + botcfg.botnick + '\r\n')
+#irc.send("PASS " + botcfg.oa + '\r\n')
+irc.send("NICK " + "justinfan420" + '\r\n')
 # capabilities request
 irc.send("CAP REQ :twitch.tv/membership" + "\r\n")
 # and join channel
@@ -43,20 +43,6 @@ irc.send("CAP REQ :twitch.tv/commands" + "\r\n")
 CHAT_MSG = re.compile(r"@.+?PRIVMSG.+?(:){1}")  # New (for irc flags mode)
 
 i = 1
-
-# # Live Checker
-def liveCheck(chan):
-    cliid = "/?client_id=q6batx0epp608isickayubi39itsckt"
-    uptadr = "https://api.twitch.tv/kraken/streams/" + chan + cliid
-
-    response = urllib.urlopen(uptadr)
-    data = json.loads(response.read())
-    if data['stream'] == None:
-        print "Offline"
-        return False
-    else:
-        print "Online"
-        return True
 
 def tablecheck():
     connx = sqlite3.connect("buddhalog.db")
@@ -93,38 +79,6 @@ def tablecheck():
         cu.execute(strings + " values (?,?,?,?,?,?)",
                    ("username", "message", 1, "flags", "channel", date))
         connx.commit()
-
-    try:
-
-        blah = "select * from points"
-        cu.execute(blah)
-
-        connx.close()
-        print "table exists already, skipping"
-        return True
-    except Exception as (e):
-        print e
-        date = time.strftime('%d/%m/%Y')
-        firsts = "create table if not exists points"
-        firststart = firsts
-        firststart += """ (
-                        usr text,
-                        point integer,
-                        id integer primary key,
-                        channel text,
-                        date_created text
-
-                        );"""
-
-        print "firststart ran"
-        time.sleep(2)
-        cu.execute(firststart)
-        date = time.strftime("%Y-%m-%dT%H:%M:%S")
-        print date
-        strings = "insert into points"
-        cu.execute(strings + " values (?,?,?,?,?)",
-                   ("username", 1, 1, "channel", date))
-        connx.commit()
         connx.close()
 
 tablecheck()
@@ -145,8 +99,8 @@ while True:
 
     if message == "!quit\r\n":
         if user == "breadcam":
-            irc.send('PRIVMSG ' + channel + " :" + "Connection Terminated... BibleThump" + "\r\n")
-            irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + data + '\r\n')
+            #irc.send('PRIVMSG ' + channel + " :" + "Connection Terminated... BibleThump" + "\r\n")
+            #irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + data + '\r\n')
             irc.send('PART ' + channel + '\r\n')
             quit()
 
@@ -155,6 +109,7 @@ while True:
     ##LOGGING
 
     try:
+        unicode(message, "utf-8")
         if "tmi.twitch.tv" not in (user) and "tmi.twitch.tv" not in (message) and (user) != "":
             if "jtv MODE" not in (user) and "justinfan" not in (user) and user != "twitchnotify":
                 date = time.strftime("%Y-%m-%dT%H:%M:%S")
@@ -167,16 +122,29 @@ while True:
                 blah = "insert into chat"
 
                 messageq = '"' + str.replace(message, "\r\n", "") + '"'
-                conn.text_factory = 'utf-8'
+                
                 c.execute(blah + " values (?,?,?,?,?,?)",
                           (user, message, temp, flags, channohash, date))
                 conn.commit()
-                conn.text_factory = 'string'
+                
 
                 i += 1
                 print i + " " + data
     except Exception as e:
-        print "oh shit something happened... " + str(e)
+        if (user) != "":
+            date = time.strftime("%Y-%m-%dT%H:%M:%S")
+            blah = "select count (*) from chat"
+            c.execute(blah)
+            temp = c.fetchone()
+            temp = temp[0] + 1
+            conn.text_factory = 'utf-8'
+
+            blah = "insert into chat"
+            c.execute(blah + " values (?,?,?,?,?,?)",
+                (user, message, temp, flags, channohash, date))    
+            conn.commit()
+
+            conn.text_factory = 'string'
         #testing
         # print data
         # print user
