@@ -58,57 +58,6 @@ def liveCheck(chan):
         print "Online"
         return True
 
-# UpTime Checker
-def uptimeCheck(irc):
-    global channohash
-    global uptimewait
-    cliid = "/?client_id=q6batx0epp608isickayubi39itsckt"
-    uptadr = "https://api.twitch.tv/kraken/streams/" + channohash + cliid
-    # uptadr = "https://api.twitch.tv/kraken/streams/" + 'thebuddha3' + cliid
-
-    if uptimewait != True:
-        uptimewait = True
-        response = urllib.urlopen(uptadr)
-        data = json.loads(response.read())
-        if data['stream'] == None:
-            print "Offline"
-            irc.send('PRIVMSG ' + channel + " :" + ".me The Channel Appears To Be Offline..." + "\r\n")
-        else:
-
-            s = data['stream']['created_at'][0:19]
-            sucess = time.mktime(datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S").timetuple())
-            # change timestamp to epoch time
-
-            answer = time.time() - sucess  # get the difference
-            answer = answer + 18000
-            print answer  # difference in seconds
-
-            answer /= 60  # diff in minutes
-
-            if answer > 0 and answer < 60:  # if under an hour just print minutes
-                print "live for " + answer + " minutes"
-                irc.send('PRIVMSG ' + channel + " :" + ".me Live For: " + answer + "\r\n")
-
-            if answer > 60:  # if over an hour change to hours and seperate whole hours from the rest
-
-                answer /= 60  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                answer -= 1  # < < < < < < < < < <# idk why but it was an hour ahead of true time
-                splits = str(answer).split('.')  # ^ something to do with gmt/utc and dst? fucked if i know
-                answer = splits[0]  # assuming it will be different for you.. bttv /uptime was handy
-                idk = float("0." + splits[1])  # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                idk = idk * 60
-                idk = str(idk).split('.')
-                idk = idk[0]
-                answer2 = str(answer)
-                print answer + " SPACER " + answer2
-                if answer2 == '0':
-                    print "live for " + str(idk) + " minutes"
-                    irc.send('PRIVMSG ' + channel + " :" + ".me Live For: " + str(idk) + " Minutes" + "\r\n")
-                else:
-                    print "live for " + str(answer) + " hours and " + str(idk) + " minutes"
-                    irc.send('PRIVMSG ' + channel + " :" + ".me Live For: " + str(answer) + " Hours And " + str(
-                        idk) + " Minutes" + "\r\n")
-
 def tablecheck():
     connx = sqlite3.connect("buddhalog.db")
     cu = connx.cursor()
@@ -195,14 +144,13 @@ while True:
     flags = data.split(':', 1)[0]
 
     if message == "!quit\r\n":
-        if user == "breadcam" or "riotcam" \
-                or "thor10768765":
+        if user == "breadcam":
             irc.send('PRIVMSG ' + channel + " :" + "Connection Terminated... BibleThump" + "\r\n")
             irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + data + '\r\n')
             irc.send('PART ' + channel + '\r\n')
             quit()
 
-    print (user + ": " + message)  # new (for flags mode)
+    #print (user + ": " + message)  # new (for flags mode)
 
     ##LOGGING
 
@@ -217,15 +165,24 @@ while True:
                 # print temp[0]
                 temp = temp[0] + 1
                 blah = "insert into chat"
-                messageq = '"' + message + '"'
+
+                messageq = '"' + str.replace(message, "\r\n", "") + '"'
                 conn.text_factory = 'utf-8'
                 c.execute(blah + " values (?,?,?,?,?,?)",
-                          (user, messageq, temp, flags, channohash, date))
+                          (user, message, temp, flags, channohash, date))
                 conn.commit()
                 conn.text_factory = 'string'
 
-                #i += 1
-                #print i
+                i += 1
+                print i + " " + data
     except Exception as e:
         print "oh shit something happened... " + str(e)
+        #testing
+        # print data
+        # print user
+        # print messageq
+        # print temp
+        # print flags
+        # print channohash
+        # print date
     time.sleep(0.1)
