@@ -12,7 +12,7 @@ import sqlite3
 re.purge()  # some housekeeping
 server = "irc.chat.twitch.tv"
 port = 443
-channohash = "breadcam"  # target channel without the hashkey
+channohash = "thebuddha3"  # target channel without the hashkey
 channel = "#" + channohash
 
 # BOOLS OF BOOLS OF BOOLS
@@ -42,7 +42,7 @@ irc.send("CAP REQ :twitch.tv/commands" + "\r\n")
 
 CHAT_MSG = re.compile(r"@.+?PRIVMSG.+?(:){1}")  # New (for irc flags mode)
 
-
+i = 1
 
 # # Live Checker
 def liveCheck(chan):
@@ -57,7 +57,6 @@ def liveCheck(chan):
     else:
         print "Online"
         return True
-
 
 # UpTime Checker
 def uptimeCheck(irc):
@@ -109,32 +108,6 @@ def uptimeCheck(irc):
                     print "live for " + str(answer) + " hours and " + str(idk) + " minutes"
                     irc.send('PRIVMSG ' + channel + " :" + ".me Live For: " + str(answer) + " Hours And " + str(
                         idk) + " Minutes" + "\r\n")
-
-def queryPlz(name, ir, count, orig):
-    zx = ""
-    xzy = ""
-
-    try:
-        conne = sqlite3.connect('buddhalog.db')
-        co = conne.cursor()
-
-        name = string.replace(name, "\r\n", "")
-
-        co.execute('select mesg from chat where usr = (?) order by id desc limit ' + str(count), [name])
-        zx = co.fetchall()
-
-        for i in zx:
-            print i[0]
-            xzy += i[0] + " >#< "
-        xzy = string.replace(xzy, "\r\n", "")
-        conne.close()
-        print zx
-        ir.send(
-            'PRIVMSG ' + channel + ' : .w ' + orig + " Last " + str(count) + " from " + name + ": " + str(xzy) + '\r\n')
-
-    except Exception as e:
-        print e
-        conne.close()
 
 def tablecheck():
     connx = sqlite3.connect("buddhalog.db")
@@ -222,12 +195,16 @@ while True:
     flags = data.split(':', 1)[0]
 
     if message == "!quit\r\n":
-        if user == "breadcam" or "riotcam" or "thor10768765":
+        if user == "breadcam" or "riotcam" \
+                or "thor10768765":
             irc.send('PRIVMSG ' + channel + " :" + "Connection Terminated... BibleThump" + "\r\n")
             irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + data + '\r\n')
             irc.send('PART ' + channel + '\r\n')
             quit()
 
+    print (user + ": " + message)  # new (for flags mode)
+
+    ##LOGGING
 
     try:
         if "tmi.twitch.tv" not in (user) and "tmi.twitch.tv" not in (message) and (user) != "":
@@ -241,10 +218,14 @@ while True:
                 temp = temp[0] + 1
                 blah = "insert into chat"
                 messageq = '"' + message + '"'
+                conn.text_factory = 'utf-8'
                 c.execute(blah + " values (?,?,?,?,?,?)",
                           (user, messageq, temp, flags, channohash, date))
                 conn.commit()
-                print "write success"
+                conn.text_factory = 'string'
+
+                #i += 1
+                #print i
     except Exception as e:
         print "oh shit something happened... " + str(e)
     time.sleep(0.1)
