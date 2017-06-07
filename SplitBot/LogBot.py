@@ -42,7 +42,7 @@ irc.send("CAP REQ :twitch.tv/commands" + "\r\n")
 
 CHAT_MSG = re.compile(r"@.+?PRIVMSG.+?(:){1}")  # New (for irc flags mode)
 
-i = 1
+
 
 def tablecheck():
     connx = sqlite3.connect("buddhalog.db")
@@ -124,12 +124,9 @@ while True:
                 messageq = '"' + str.replace(message, "\r\n", "") + '"'
                 
                 c.execute(blah + " values (?,?,?,?,?,?)",
-                          (user, message, temp, flags, channohash, date))
+                          (user, messageq, temp, flags, channohash, date))
                 conn.commit()
-                
 
-                i += 1
-                print i + " " + data
     except Exception as e:
         if (user) != "":
             date = time.strftime("%Y-%m-%dT%H:%M:%S")
@@ -141,16 +138,11 @@ while True:
 
             blah = "insert into chat"
             c.execute(blah + " values (?,?,?,?,?,?)",
-                (user, message, temp, flags, channohash, date))    
+                (user, message, temp, flags, channohash, date)
+                      )
             conn.commit()
 
             conn.text_factory = 'string'
-        #testing
-        # print data
-        # print user
-        # print messageq
-        # print temp
-        # print flags
-        # print channohash
-        # print date
+            print e
+            print messageq
     time.sleep(0.1)

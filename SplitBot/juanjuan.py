@@ -48,7 +48,7 @@ systemBootUp = True
 #IRC SEND MESSAGES
 msg1 = ".me (bot): I don't like links... DansGame " # link posting timeout message
 msgPlaylist =  ".me Check Out Buddha's Playlist https://www.youtube.com/playlist?list=PLbegEdtZ4V6V4_76iimPQpJp4MWjAFKJk"
-msgSubscriber = ".me If you want to support the channel and get access to our sub only emotes buddhaCrash buddhaLove buddhaPineapple buddhaHi buddhaLean buddhaSellout buddhaCry buddhaLUL buddhaPray buddhaTen buddhaGasm buddhaPray you can subscribe at https://www.twitch.tv/thebuddha3/subscribe <3"
+msgSubscriber = ".me If you want to support the channel and get access to our sub only emotes buddhaCrash buddhaLove buddhaPineapple buddhaHi buddhaSellout buddhaCry buddhaLUL buddhaPray buddhaTen buddhaGasm buddhaPray you can subscribe at https://www.twitch.tv/thebuddha3/subscribe <3"
 msgMeta = " .me " + " ⚠️ ⚠️ ⚠️ ⚠️ Anyone caught posting META INFO in chat will receive a TIMEOUT. It ruins the experience for BUDDHA AND HIS VIEWERS. It's also against SERVER AND CHANNEL rules ⚠️ ⚠️ ⚠️ ⚠️"
 msgBob = ".me Please go checkout Bob at https://www.twitch.tv/coolidgehd show him some love and drop him a follow"
 msgReggie = ".me Please go checkout Reggie at https://www.twitch.tv/SirPinkleton00 show him some love and drop him a follow"
@@ -57,7 +57,7 @@ msgPeter = ".me Peter the Great you already know https://www.twitch.tv/bubblescs
 msgGranny = ".me Please go checkout Granny at https://www.twitch.tv/DisbeArex show her some love and drop her a follow"
 msgDiscord = ".me Make sure to Join us in Buddha's Dojo https://discordapp.com/invite/wGx4dtG"
 msgTwitter = ".me Keep up to date with the latest streamn info by following Buddha on Twitter at https://www.twitter.com/TheBuddha_3"
-msgMerch = "A STATE OF EMERGENCY HAS OFFICIALLY BEEN ISSUED FOR THE CITY OF LOS SANTOS Check out all the \_eanbois and SOE Merch at https://www.designbyhumans.com/state-of-emergency"
+msgMerch = "A STATE OF EMERGENCY HAS OFFICIALLY BEEN ISSUED FOR THE CITY OF LOS SANTOS Check out all the \_eanbois and SOE Merch at https://www.designbyhumans.com/shop/Buddha3/"
 # CONNECTION #
 # init socket
 self = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -329,7 +329,8 @@ def queryPlz(name, ir, count, orig):
 
         name = string.replace(name, "\r\n", "")
 
-        co.execute('select mesg from chat where usr = (?) order by id desc limit ' + str(count), [name])
+        co.execute('select mesg from chat where usr = lower((?)) order by id desc limit ' + str(count), [name])
+
         zx = co.fetchall()
 
         for i in zx:
@@ -528,7 +529,7 @@ while True:
         subname = subname.split("=")[1]
         submonths = subscriber.split(";")[8]
         submonths = submonths.split("=")[1]
-        if submonths == "1":
+        if submonths == "1" or submonths == 0:
             irc.send('PRIVMSG ' + channel + ' :' + subname + " just subscribed. Welcome to Buddha's Dojo buddhaHi Spam some love in the chat for our newest member buddhaLove" + '\r\n')
         else:
             irc.send('PRIVMSG ' + channel + ' :' + subname + " just resubscribed for " + submonths + " months. Thanks for staying loyal to Buddha's Dojo buddhaHi Spam some love in the chat! buddhaLove" + '\r\n')
@@ -774,6 +775,29 @@ while True:
                 queryPlz(str(messageq), irc, int(messagereqc), user)
         except Exception as e:
             print e
+
+    if message == "avon\r\n":
+        irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "250" + '\r\n')
+
+    # if "tmi.twitch.tv WHISPER thebuddha3bot" in (message):
+    #     WhisperMsg = message.split(":")[2]
+    #     WhisperMsg = str.replace(WhisperMsg, "\r\n", "")
+    #     if "!last" in (WhisperMsg):
+    #         print "test1"
+    #         try:
+    #             # if "mod=1" in (flags) or "badges=broadcaster" in (flags) or (user) == "thor10768765":
+    #             if "!last" in (WhisperMsg):
+    #                 messageq = WhisperMsg.split(" ")
+    #                 messagereqc = messageq[0]
+    #                 messageq = messageq[1]
+    #
+    #                 messagereqc = string.replace(messagereqc, "!last", "")
+    #
+    #                 print messageq
+    #                 print messagereqc
+    #                 queryPlz(str(messageq), irc, int(messagereqc), user)
+    #         except Exception as e:
+    #             print e
 
         # # if re.search(r"[cC]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", message):
 # #

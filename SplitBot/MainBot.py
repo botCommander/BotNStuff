@@ -6,7 +6,7 @@ import string
 import time
 from threading import *
 import re
-import urllib, json
+import urllib, urllib2, json
 import datetime
 import random
 import sqlite3
@@ -48,7 +48,7 @@ systemBootUp = True
 # IRC SEND MESSAGES
 msg1 = ".me (bot): I don't like links... DansGame "  # link posting timeout message
 msgPlaylist = ".me Check Out Buddha's Playlist https://www.youtube.com/playlist?list=PLbegEdtZ4V6V4_76iimPQpJp4MWjAFKJk"
-msgSubscriber = ".me If you want to support the channel and get access to our sub only emotes buddhaCrash buddhaLove buddhaPineapple buddhaHi buddhaLean buddhaSellout buddhaCry buddhaLUL buddhaPray buddhaTen buddhaGasm buddhaPray you can subscribe at https://www.twitch.tv/thebuddha3/subscribe <3"
+msgSubscriber = ".me If you want to support the channel and get access to our sub only emotes buddhaCrash buddhaLove buddhaPineapple buddhaHi buddhaSellout buddhaCry buddhaLUL buddhaPray buddhaTen buddhaGasm buddhaPray you can subscribe at https://www.twitch.tv/thebuddha3/subscribe <3"
 msgMeta = " .me " + " ⚠️ ⚠️ ⚠️ ⚠️ Anyone caught posting META INFO in chat will receive a TIMEOUT. It ruins the experience for BUDDHA AND HIS VIEWERS. It's also against SERVER AND CHANNEL rules ⚠️ ⚠️ ⚠️ ⚠️"
 msgBob = ".me Please go checkout Bob at https://www.twitch.tv/coolidgehd show him some love and drop him a follow"
 msgReggie = ".me Please go checkout Reggie at https://www.twitch.tv/SirPinkleton00 show him some love and drop him a follow"
@@ -57,7 +57,7 @@ msgPeter = ".me Peter the Great you already know https://www.twitch.tv/bubblescs
 msgGranny = ".me Please go checkout Granny at https://www.twitch.tv/DisbeArex show her some love and drop her a follow"
 msgDiscord = ".me Make sure to Join us in Buddha's Dojo https://discordapp.com/invite/wGx4dtG"
 msgTwitter = ".me Keep up to date with the latest streamn info by following Buddha on Twitter at https://www.twitter.com/TheBuddha_3"
-msgMerch = "A STATE OF EMERGENCY HAS OFFICIALLY BEEN ISSUED FOR THE CITY OF LOS SANTOS Check out all the \_eanbois and SOE Merch at https://www.designbyhumans.com/state-of-emergency"
+msgMerch = "A STATE OF EMERGENCY HAS OFFICIALLY BEEN ISSUED FOR THE CITY OF LOS SANTOS Check out all the \_eanbois and SOE Merch at https://www.designbyhumans.com/shop/Buddha3/"
 # CONNECTION #
 # init socket
 self = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -116,6 +116,7 @@ def calcIt(v1, op, v2):
         except Exception as e:
             print e
             print "likely NaN"  # python has check for Not a number?
+
 
 ###############################
 # Timers Unsetters
@@ -369,7 +370,8 @@ def queryPlz(name, ir, count, orig):
 
         name = string.replace(name, "\r\n", "")
 
-        co.execute('select mesg from chat where usr = (?) order by id desc limit ' + str(count), [name])
+        co.execute('select mesg from chat where usr = lower((?)) order by id desc limit ' + str(count), [name])
+
         zx = co.fetchall()
 
         for i in zx:
@@ -611,7 +613,7 @@ while True:
         calcIt(firts, opz, secn)
 
     if message == "!quit\r\n":
-        if user == "thebuddha3" or "breadcam" or "riotcam" or "thor10768765":
+        if user == "thebuddha3" or user == "breadcam" or user == "riotcam" or user == "thor10768765":
             irc.send('PRIVMSG ' + channel + " :" + "Connection Terminated... BibleThump" + "\r\n")
             irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + data + '\r\n')
             irc.send('PART ' + channel + '\r\n')
@@ -820,30 +822,29 @@ while True:
         except Exception as e:
             print e
 
-            # # if re.search(r"[cC]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", message):
-            # #
-            # #     print message
-            # #
-            # #     message = message.split(" ")
-            # #     print str(len(message)) + " msglen"
-            # #     total = 0
-            # #     for i in (message):
-            # #         print i + " hmmm"
-            # #         xyy = i
-            # #         if re.match(r"[Cc]heer[0-9]|[Kk]appa[0-9]|[Kk]reygasm[0-9]|[Ss]wift[Rr]age[0-9]", xyy):
-            # #             print "yay"
-            # #
-            # #             x = re.sub("[^0-9]", "", i)
-            # #             print i + " i"
-            # #             print x + " x"
-            # #             total += int(x)
-            # #
-            # #     message = string.replace(str(message), "\r\n", "")
-            # #     # bitstotal = int(bitstotal) + total
-            # #
-            # #     if total > 100000:
-            # #         irc.send("PRIVMSG " + channel + " :" + ".me " + user + "Just Dropped " + str(
-            # #             total) + " Bits!!! Thanks For Supporting The Stream Maddafakka!! :) " + "\r\n")
+    if message == "avon\r\n":
+        irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "250" + '\r\n')
+
+    if "tmi.twitch.tv WHISPER thebuddha3bot" in (message):
+        WhisperMsg = message.split(":")[2]
+        WhisperMsg = str.replace(WhisperMsg, "\r\n", "")
+        if "!last" in (WhisperMsg):
+            print "test1"
+            try:
+                # if "mod=1" in (flags) or "badges=broadcaster" in (flags) or (user) == "thor10768765":
+                if "!last" in (WhisperMsg):
+                    messageq = WhisperMsg.split(" ")
+                    messagereqc = messageq[0]
+                    messageq = messageq[1]
+
+                    messagereqc = string.replace(messagereqc, "!last", "")
+
+                    print messageq
+                    print messagereqc
+                    queryPlz(str(messageq), irc, int(messagereqc), user)
+            except Exception as e:
+                print e
+
 
     # print data
     time.sleep(0.1)
@@ -863,30 +864,10 @@ while True:
 # Auto announce on new sub.
 #
 #
-# Known um FEATURES
-# Auto announce for new subs fires off when hosting
-# Auto announce needs to trigger for msg share rather than the twitch annoucement. This should cover resubs.
-# Um Permit
-#
 # Planned Features
 # Setup Pleb command timer so no spam
 # CSV Archives
 #
 #
 #
-# Examples
-# flags
-# @badges=broadcaster/1,turbo/1;color=#E100FF;display-name=Breadcam;emotes=;id=e40d4a02-6741-4fa9-847c-aeeb3d923650;mod=0;room-id=123950262;sent-ts=1494032337318;subscriber=0;tmi-sent-ts=1494032328735;turbo=1;user-id=123950262;user-type=
 
-
-
-
-
-
-# #Errors
-# oh shit something happened... You must not use 8-bit bytestrings unless you use a text_factory that can interpret 8-bit bytestrings (like text_factory = str). It is highly recommended that you instead just switch your application to Unicode strings.
-# emmortall: @TheBuddha3 do something man please!@!@!#@!@$#!@#$!@#$!
-
-
-# Saved Whisper Recieve
-# thor10768765: @badges=;color=#0000FF;display-name=thor10768765;emotes=;message-id=1;thread-id=90528942_155572970;turbo=0;user-id=90528942;user-type= :thor10768765!thor10768765@thor10768765.tmi.twitch.tv WHISPER thebuddha3bot :hai
