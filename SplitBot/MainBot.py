@@ -56,8 +56,8 @@ msgTony = ".me Please go checkout Tony at https://www.twitch.tv/anthonyz_ show h
 msgPeter = ".me Peter the Great you already know https://www.twitch.tv/bubblescsgo show him some love and drop him a follow"
 msgGranny = ".me Please go checkout Granny at https://www.twitch.tv/DisbeArex show her some love and drop her a follow"
 msgDiscord = ".me Make sure to Join us in Buddha's Dojo https://discordapp.com/invite/wGx4dtG"
-msgTwitter = ".me Keep up to date with the latest streamn info by following Buddha on Twitter at https://www.twitter.com/TheBuddha_3"
-msgMerch = "A STATE OF EMERGENCY HAS OFFICIALLY BEEN ISSUED FOR THE CITY OF LOS SANTOS Check out all the \_eanbois and SOE Merch at https://www.designbyhumans.com/shop/Buddha3/"
+msgTwitter = ".me Keep up to date with the latest stream info by following Buddha on Twitter at https://www.twitter.com/TheBuddha_3"
+msgMerch = "buddhaGasm Check out all the Buddha Merch out at https://www.designbyhumans.com/shop/Buddha3/  buddhaGasm "
 # CONNECTION #
 # init socket
 self = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -80,7 +80,6 @@ irc.send("CAP REQ :twitch.tv/tags" + "\r\n")
 irc.send("CAP REQ :twitch.tv/commands" + "\r\n")
 # join message
 # irc.send("PRIVMSG " + channel + " :" + ".me Im back KappaClaus " + "\r\n")
-
 CHAT_MSG = re.compile(r"@.+?PRIVMSG.+?(:){1}")  # New (for irc flags mode)
 
 
@@ -116,7 +115,6 @@ def calcIt(v1, op, v2):
         except Exception as e:
             print e
             print "likely NaN"  # python has check for Not a number?
-
 
 ###############################
 # Timers Unsetters
@@ -191,6 +189,11 @@ def unsetpPostTimer():
     unsetpPostwait = False
 
 
+def unsetpServer():
+    global unsetpServerwait
+    unsetpServerWait = False
+
+
 def blacklistAdd(garbage):
     global blacklist
     # print "before " + blacklistlist
@@ -208,7 +211,6 @@ def blacklistRem(garbage):
         x += 1
     print garbage
 
-
 # Live Checker
 def liveCheck(chan):
     cliid = "/?client_id=q6batx0epp608isickayubi39itsckt"
@@ -223,14 +225,12 @@ def liveCheck(chan):
         print "Online"
         return True
 
-
 # UpTime Checker
 def uptimeCheck(irc):
     global channohash
     global uptimewait
     cliid = "/?client_id=q6batx0epp608isickayubi39itsckt"
     uptadr = "https://api.twitch.tv/kraken/streams/" + channohash + cliid
-    # uptadr = "https://api.twitch.tv/kraken/streams/" + 'thebuddha3' + cliid
 
     if uptimewait != True:
         uptimewait = True
@@ -278,88 +278,6 @@ def uptimeCheck(irc):
         ut = Timer(30, unsetUt)
         ut.start()
 
-
-# Points/XP/DBStarter/Steak
-# def chatz():
-#     global channohash
-#     if liveCheck(channohash):
-#         conn = sqlite3.connect('buddhalog.db')
-#         c = conn.cursor()
-#         url = urllib.urlopen('https://tmi.twitch.tv/group/user/' + channohash + '/chatters').read()
-#         url = json.loads(url)
-#         mods = url.get('chatters').get('moderators')
-#         views = url.get('chatters').get('viewers')
-#         # print mods
-#         # print views
-#         if mods != None:
-#
-#             c.execute('select usr from points')
-#
-#             test = c.fetchall()
-#             try:
-#                 if test[0] == None:
-#                     test = ":"
-#             except IndexError:
-#                 print 'db empty'
-#
-#             for name in (mods):
-#
-#                 modsit = [item for item in test if item[0] == name]
-#
-#                 if modsit:
-#
-#                     # print "sucess!!!"
-#                     c.execute("""update points set point = point + 10 where usr = (?)""", [name])
-#                     print "adding points for " + name
-#
-#                     # increment points and timetot
-#                     conn.commit()
-#
-#                 else:
-#                     date = time.strftime('%d/%m/%Y')
-#                     blah = "select count (*) from points"
-#                     c.execute(blah)
-#                     temp = c.fetchone()
-#                     # print temp[0]
-#                     temp = temp[0] + 1
-#                     blah = "insert into points"
-#
-#                     c.execute(blah + " values (?,?,?,?,?)",
-#                               (name, 0, temp, channohash, date))
-#                     conn.commit()
-#                     # c.executemany("""insert into usr Values (?,?,?,?,?)""", [(name, 1, temp, channohash, datenow),])
-#
-#
-#                     print "added user :  " + name
-#
-#         for plebian in (views):
-#
-#             plebsit = [pleb for pleb in test if pleb[0] == plebian]
-#
-#             if plebsit:
-#                 c.execute("""update points set point = point + 10 where usr = (?)""", [plebian])
-#                 conn.commit()
-#                 print "adding points for " + plebian
-#             else:
-#
-#                 date = time.strftime('%d/%m/%Y')
-#                 blah = "select count (*) from points"
-#                 c.execute(blah)
-#                 temp = c.fetchone()
-#                 # print temp[0]
-#                 temp = temp[0] + 1
-#                 blah = "insert into points"
-#
-#                 c.execute(blah + " values (?,?,?,?,?)",
-#                           (plebian, 0, temp, channohash, date))
-#                 conn.commit()
-#                 # c.executemany("""insert into usr Values (?,?,?,?,?)""", [(name, 1, temp, channohash, datenow),])
-#
-#                 print "added user : " + plebian
-#         conn.commit()
-#         conn.close()
-#     xyz = Timer(600, chatz)
-#     xyz.start()
 def queryPlz(name, ir, count, orig):
     zx = ""
     xzy = ""
@@ -386,7 +304,6 @@ def queryPlz(name, ir, count, orig):
     except Exception as e:
         print e
         conne.close()
-
 
 def tablecheck():
     connx = sqlite3.connect("buddhalog.db")
@@ -457,7 +374,6 @@ def tablecheck():
         connx.commit()
         connx.close()
 
-
 def checkpoints(name):
     global waitplease
     global waitplease2
@@ -513,7 +429,6 @@ def checkpoints(name):
         conn.close()
 
         waitplease2 = False
-
 
 # 1 point per min Scale will be changed
 # (1):30m (2):1h (3):2h (4):4h (5):8h (6):16h (7):32h (8):64h (9):128h (10):256h (11):512h (12):1024h
@@ -573,7 +488,7 @@ while True:
         subname = subname.split("=")[1]
         submonths = subscriber.split(";")[8]
         submonths = submonths.split("=")[1]
-        if submonths == "1":
+        if submonths == "1" or submonths == "0":
             irc.send(
                 'PRIVMSG ' + channel + ' :' + subname + " just subscribed. Welcome to Buddha's Dojo buddhaHi Spam some love in the chat for our newest member buddhaLove" + '\r\n')
         else:
@@ -685,6 +600,7 @@ while True:
             uss.start()
 
             # shoutouts
+
     if message == "!bob\r\n":
         if unsetpBobwait != True:
             unsetpBobwait = True
@@ -721,6 +637,7 @@ while True:
             uss.start()
 
             # Social
+
     if message == "!discord\r\n":
         if unsetpDiscordwait != True:
             unsetpDiscordwait = True
@@ -757,25 +674,15 @@ while True:
         if (squidBlocker) == 1:
             irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "5" + '\r\n')
 
-            # if "!blacklist" in (message):
-            #    if "mod=1" in (flags) or "badges=broadcaster" in (flags):
-            #        garbage = message.split(" ")
-            #        garbage = str(garbage[1:len(garbage)])
-            #        garbage = str(garbage[1:-1])
-
-            # blacklistAdd(garbage)
-            # irc.send("PRIVMSG " + channel + " :" + "\"" + garbage + "\"" " Has been added to the blacklist" + "\r\n")
-
             # um unbanned but on warning
-    if (user) == "yasirkhan123" or (user) == "billbob19" or (user) == "xeapzz" or (user) == "littlejabari":
+    if (user) == "nothingbutsavaqe" or (user) == "billbob19" or (user) == "xeapzz" or (user) == "littlejabari":
+        print "shitlords"
         irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + " : " + message + '\r\n')
-
     # Tell me when plebs are retarded so i can ban
     if "nigger" in (message) or "n i g g e r" in (message) or "faggot" in (message) or "f a g g o t" in (message):
         print "shit"
 
         irc.send('PRIVMSG ' + channel + ' :' ".w breadcam " + user + ":" + message + '\r\n')
-
     # blacklist not working yet
     if "!blacklist" in (message):
         if "mod=1" in (flags) or "badges=broadcaster" in (flags) or (user) == "thor10768765":
@@ -822,29 +729,6 @@ while True:
         except Exception as e:
             print e
 
-    if message == "avon\r\n":
-        irc.send('PRIVMSG ' + channel + ' :' ".timeout " + user + " " + "250" + '\r\n')
-
-    if "tmi.twitch.tv WHISPER thebuddha3bot" in (message):
-        WhisperMsg = message.split(":")[2]
-        WhisperMsg = str.replace(WhisperMsg, "\r\n", "")
-        if "!last" in (WhisperMsg):
-            print "test1"
-            try:
-                # if "mod=1" in (flags) or "badges=broadcaster" in (flags) or (user) == "thor10768765":
-                if "!last" in (WhisperMsg):
-                    messageq = WhisperMsg.split(" ")
-                    messagereqc = messageq[0]
-                    messageq = messageq[1]
-
-                    messagereqc = string.replace(messagereqc, "!last", "")
-
-                    print messageq
-                    print messagereqc
-                    queryPlz(str(messageq), irc, int(messagereqc), user)
-            except Exception as e:
-                print e
-
 
     # print data
     time.sleep(0.1)
@@ -864,10 +748,30 @@ while True:
 # Auto announce on new sub.
 #
 #
+# Known um FEATURES
+# Auto announce for new subs fires off when hosting
+# Auto announce needs to trigger for msg share rather than the twitch annoucement. This should cover resubs.
+# Um Permit
+#
 # Planned Features
 # Setup Pleb command timer so no spam
 # CSV Archives
 #
 #
 #
+# Examples
+# flags
+# @badges=broadcaster/1,turbo/1;color=#E100FF;display-name=Breadcam;emotes=;id=e40d4a02-6741-4fa9-847c-aeeb3d923650;mod=0;room-id=123950262;sent-ts=1494032337318;subscriber=0;tmi-sent-ts=1494032328735;turbo=1;user-id=123950262;user-type=
 
+
+
+
+
+
+# #Errors
+# oh shit something happened... You must not use 8-bit bytestrings unless you use a text_factory that can interpret 8-bit bytestrings (like text_factory = str). It is highly recommended that you instead just switch your application to Unicode strings.
+# emmortall: @TheBuddha3 do something man please!@!@!#@!@$#!@#$!@#$!
+
+
+# Saved Whisper Recieve
+# thor10768765: @badges=;color=#0000FF;display-name=thor10768765;emotes=;message-id=1;thread-id=90528942_155572970;turbo=0;user-id=90528942;user-type= :thor10768765!thor10768765@thor10768765.tmi.twitch.tv WHISPER thebuddha3bot :hai

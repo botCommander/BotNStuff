@@ -54,7 +54,7 @@ def liveCheck(chan):
     data = json.loads(response.read())
     if data['stream'] == None:
         print "Offline"
-        return True
+        return False
     else:
         print "Online"
         return True
